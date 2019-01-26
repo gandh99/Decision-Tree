@@ -1,3 +1,9 @@
+#####################################################################
+#                                                                   #
+# File Description: Trains a decision tree given a training dataset #
+#                                                                   #
+#####################################################################
+
 import numpy as np
 import math 
 
@@ -9,7 +15,6 @@ class Node:
         self.depth = depth
         self.left = None
         self.right = None
-        print(splitAttribute, splitValue, terminalValue, depth)
 
     def insert(self, leftBranch, rightBranch):
         self.left = leftBranch
@@ -111,7 +116,8 @@ def calculate_remainder(sLeft, sRight):
 
     return (sLeftLength / sum) * (calculate_entropy(sLeft)) + (sRightLength / sum) * (calculate_entropy(sRight))
 
+
 if __name__ == "__main__":
-    dataset = np.loadtxt("clean_dataset.txt")
+    trainingDataset = np.loadtxt("clean_dataset.txt")
     depth = 0
-    decision_tree_learning(dataset, depth)
+    root, depth = decision_tree_learning(trainingDataset, depth)

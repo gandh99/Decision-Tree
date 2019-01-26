@@ -25,13 +25,12 @@ def evaluate(testDB, trainedTree):
         recall = calculate_recall(truePositive, falseNegative)
         precision = calculate_precision(truePositive, falsePositive)
         f1 = calculate_f1(recall, precision)
-        totalErrors += falsePositive + falseNegative
+        totalErrors += falsePositive
 
         labelDict[element] = {"recall": recall, "precision": precision, "f1": f1}
         index += 1
 
     accuracy = calculate_classification_rate(numOfRows, totalErrors)
-
     for element in labelDict:
         print(element, ":", labelDict[element])
     print("Accuracy:", accuracy)
@@ -84,15 +83,14 @@ def calculate_precision(truePositive, falsePositive):
 def calculate_f1(precision, recall):
     return 2 * (precision * recall) / (precision + recall)
 
-# TODO: Metric
+# Metric: classification rate = 1 - classification error
 def calculate_classification_rate(numOfRows, totalErrors):
     return (numOfRows - totalErrors) / numOfRows
 
 if __name__ == "__main__":
     trainingDataset = np.loadtxt("clean_dataset.txt")
+    # np.random.shuffle(trainingDataset)    # Optional: Shuffle dataset
     depth = 0
     root, depth = decision_tree_learning(trainingDataset, depth)
-
-    testingDataset = np.loadtxt("noisy_dataset.txt")
-    evaluate(testingDataset, root)
+    evaluate(trainingDataset, root)
 

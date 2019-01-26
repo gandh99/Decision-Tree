@@ -2,51 +2,75 @@ import numpy as np
 import math 
 
 class Node:
-    def __init__(self):
-        return
+    def __init__(self, splitAttribute, splitValue, terminalValue, depth):
+        self.splitAttribute = splitAttribute
+        self.splitValue = splitValue
+        self.terminalValue = terminalValue
+        self.depth = depth
+        self.left = None
+        self.right = None
+        print(splitAttribute, splitValue, terminalValue, depth)
 
+    def insert(self, leftBranch, rightBranch):
+        self.left = leftBranch
+        self.right = rightBranch
+
+# Main function to recursively train the decision tree
 def decision_tree_learning(training_dataset, depth):
-    labelCol = 7
     numOfRows = len(training_dataset)
     numOfCols = len(training_dataset[0])
-    firstLabel = training_dataset[0][labelCol]
+
+    if numOfRows == 1:
+        return (Node(None, None, training_dataset[0, -1], depth), depth)
 
     # Check if all samples have the same label 
-    for row in range(numOfRows):
-        if training_dataset[row][labelCol] != firstLabel:
-            # return (a leaf node with this value, depth)
+    for row in range(1, numOfRows):
+        if training_dataset[row, -1] != training_dataset[row - 1, -1]:
             break
+        elif row == numOfRows - 1:
+            return (Node(None, None, training_dataset[0, -1], depth), depth)
 
     # Split if all samples do not have the same label
-    splitAttribute, splitValue = find_split(training_dataset)
-    print splitAttribute, splitValue
+    splitAttribute, splitValue, leftDataset, rightDataset = find_split(training_dataset)
 
-    return
+    # Create a new root node using the split
+    root = Node(splitAttribute, splitValue, None, depth)
 
-# Return the attribute and the value that results in the maximum information gain
+    # Recursively generate nodes for left and right branches of the root node and insert them
+    leftBranch, leftDepth = decision_tree_learning(leftDataset, depth + 1)
+    rightBranch, rightDepth = decision_tree_learning(rightDataset, depth + 1)
+    root.insert(leftBranch, rightBranch)
+
+    # Return the root node
+    return (root, max(leftDepth, rightDepth))
+
+# Find and return the attribute and the value that results in the maximum information gain
+# Also return the dataset that is split according to the attribute and value found
 def find_split(training_dataset):
     maxInformationGain = 0.0
     splitAttribute = 0
     splitValue = 0
-    labelCol = 7
+    indexOfSplit = 0
+    leftDataset = None
+    rightDataset = None
     numOfRows = len(training_dataset)
     numOfAttributes = len(training_dataset[0]) - 1
 
     for attribute in range(numOfAttributes):
         sortedCopy = training_dataset[np.argsort(training_dataset[:, attribute])] # sort by attribute
-        currentLabel = sortedCopy[0][labelCol]
-        for row in range(numOfRows):
-            if sortedCopy[row][labelCol] != currentLabel:
-                sLeft = sortedCopy[0:row - 1, :]
-                sRight = sortedCopy[row:, :]
-                informationGain = calculate_gain(sortedCopy, sLeft, sRight)
+        for row in range(1, numOfRows):
+            if sortedCopy[row - 1, -1] != sortedCopy[row, -1]:
+                sLeft = sortedCopy[0:row, -1]
+                sRight = sortedCopy[row:, -1]
+                informationGain = calculate_gain(sortedCopy[:, -1], sLeft, sRight)
                 if informationGain > maxInformationGain:
                     maxInformationGain = informationGain
                     splitAttribute = attribute
-                    splitValue = sortedCopy[row - 1][attribute]
-                currentLabel = sortedCopy[row][labelCol]
-
-    return (splitAttribute, splitValue)
+                    splitValue = (sortedCopy[row - 1, attribute] + sortedCopy[row, attribute]) / 2
+                    leftDataset = sortedCopy[0:row, :]
+                    rightDataset = sortedCopy[row:, :]       
+    
+    return (splitAttribute, splitValue, leftDataset, rightDataset)
 
 # Calculate information gain associated with particular split
 def calculate_gain(sAll, sLeft, sRight):
@@ -57,13 +81,12 @@ def calculate_gain(sAll, sLeft, sRight):
 
 # Calculate entropy (H value)
 def calculate_entropy(dataset):
-    labelCol = 7
     numOfRows = len(dataset)
     pDictionary = {}
 
     # Iterate through the dataset and update the pDictionary
     for row in range(numOfRows):
-        key = dataset[row][labelCol]
+        key = dataset[row]
         if key in pDictionary:
             pDictionary[key] += 1
         else:
@@ -71,12 +94,12 @@ def calculate_entropy(dataset):
 
     # Convert the absolute values in pDictionary into proportions
     for key in pDictionary:
-        pDictionary[key] = float(pDictionary[key]) / numOfRows    
+        pDictionary[key] = float(pDictionary[key]) / numOfRows
 
     # Perform the summation to calculate entropy
-    entropy = 0.0
+    entropy = 0.000
     for key in pDictionary:
-        entropy += pDictionary[key] * math.log(pDictionary[key], 2)
+        entropy += pDictionary[key] * np.log2(pDictionary[key])
 
     return -entropy
 
@@ -89,6 +112,6 @@ def calculate_remainder(sLeft, sRight):
     return (sLeftLength / sum) * (calculate_entropy(sLeft)) + (sRightLength / sum) * (calculate_entropy(sRight))
 
 if __name__ == "__main__":
-    cleanDataset = np.loadtxt("clean_dataset.txt")
+    dataset = np.loadtxt("clean_dataset.txt")
     depth = 0
-    decision_tree_learning(cleanDataset, depth)
+    decision_tree_learning(dataset, depth)

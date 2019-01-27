@@ -17,12 +17,16 @@ if __name__ == "__main__":
 	# First shuffle the dataset
 	np.random.shuffle(dataset)
 
-    # Split dataset into discrete training and testing sets
+	# Perform k-fold cross-validation to generate a series of metrics for each iteration
 	for k in range(kFold):
+	    # Split dataset into discrete training and testing sets
 		testingDataset = dataset[k*segmentSize:(k + 1)*segmentSize, :]
 		trainingDataset1 = dataset[0:k*segmentSize, :]
 		trainingDataset2 = dataset[(k + 1)*segmentSize:, :]
 		trainingDataset = np.concatenate((trainingDataset1, trainingDataset2))
 
+		# Train the dataset
 		root, depth = decision_tree_learning(trainingDataset, depth)
+
+		# Evaluate the dataset
 		evaluate(testingDataset, root)

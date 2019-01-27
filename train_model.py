@@ -5,7 +5,9 @@
 #####################################################################
 
 import numpy as np
-import math 
+import math
+from plot_model import * 
+from graphiz_model import *
 
 class Node:
     def __init__(self, splitAttribute, splitValue, terminalValue, depth):
@@ -15,6 +17,7 @@ class Node:
         self.depth = depth
         self.left = None
         self.right = None
+        # print(splitAttribute, splitValue, terminalValue, depth)
 
     def insert(self, leftBranch, rightBranch):
         self.left = leftBranch
@@ -118,6 +121,13 @@ def calculate_remainder(sLeft, sRight):
 
 
 if __name__ == "__main__":
+    # Train the decision tree
     trainingDataset = np.loadtxt("clean_dataset.txt")
     depth = 0
     root, depth = decision_tree_learning(trainingDataset, depth)
+
+    # Plot the tree in matplotlib
+    plot_tree(root)
+
+    # Plot the tree with graphiz
+    # generate_data(root)

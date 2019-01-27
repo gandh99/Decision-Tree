@@ -86,6 +86,7 @@ def calculate_f1(precision, recall):
 # Metric: classification rate = 1 - classification error
 def calculate_classification_rate(numOfRows, totalErrors):
     return (numOfRows - totalErrors) / numOfRows
+    
 
 if __name__ == "__main__":
     trainingDataset = np.loadtxt("clean_dataset.txt")

@@ -6,14 +6,14 @@
 
 from train_model import *
 
-# Evaluate accuracy of decision tree using a confusion matrix
-# Store the results in a label dictionary
+# Store the predicated vs expected outcomes in a 4x4 confusion matrix, represented by labelDict
+# Compute and return the accuracy, confusion matrix and labelDict of the model on the testing dataset
 def evaluate(testDB, trainedTree):
     index = 0
     totalErrors = 0
     numOfRows = len(testDB)
     confusionMatrix = create_confusion_matrix(4, 4)
-    labelDict = dict.fromkeys({"label1", "label2", "label3", "label4"})
+    labelDict = dict.fromkeys({"label1", "label2", "label3", "label4"}) # Stores data on recall, precision and f1 for each label
 
     # Generate the confusion matrix
     for row in range(numOfRows):
@@ -31,11 +31,8 @@ def evaluate(testDB, trainedTree):
         index += 1
 
     accuracy = calculate_classification_rate(numOfRows, totalErrors)
-    for element in labelDict:
-        print(element, ":", labelDict[element])
-    print("Accuracy:", accuracy)
 
-    return 
+    return accuracy, confusionMatrix, labelDict
 
 # Classify a particular data point
 def classify(data, node, confusionMatrix):

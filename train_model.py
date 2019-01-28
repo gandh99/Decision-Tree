@@ -9,6 +9,7 @@ import math
 from plot_model import * 
 from graphiz_model import *
 
+# Holds the data of each node/leaf in the decision tree
 class Node:
     def __init__(self, splitAttribute, splitValue, terminalValue, depth):
         self.splitAttribute = splitAttribute
@@ -17,7 +18,6 @@ class Node:
         self.depth = depth
         self.left = None
         self.right = None
-        # print(splitAttribute, splitValue, terminalValue, depth)
 
     def insert(self, leftBranch, rightBranch):
         self.left = leftBranch

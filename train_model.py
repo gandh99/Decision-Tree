@@ -18,10 +18,24 @@ class Node:
         self.depth = depth
         self.left = None
         self.right = None
+        self.numberOfNodes = [0]
+        # print(splitAttribute, splitValue, terminalValue, depth)
 
     def insert(self, leftBranch, rightBranch):
         self.left = leftBranch
         self.right = rightBranch
+
+    def get_number_of_nodes(self):
+        self.calculate_number_of_nodes(self.numberOfNodes)
+        return self.numberOfNodes[0]
+
+    def calculate_number_of_nodes(self, numberOfNodes):
+        numberOfNodes[0] += 1
+        if self.terminalValue == None:
+            self.left.calculate_number_of_nodes(numberOfNodes)
+            self.right.calculate_number_of_nodes(numberOfNodes)
+        else:
+            return
 
 # Main function to recursively train the decision tree
 def decision_tree_learning(training_dataset, depth):
@@ -127,7 +141,7 @@ if __name__ == "__main__":
     root, depth = decision_tree_learning(trainingDataset, depth)
 
     # Plot the tree in matplotlib
-    plot_tree(root)
+    # plot_tree(root)
 
     # Plot the tree with graphiz
     # generate_data(root)

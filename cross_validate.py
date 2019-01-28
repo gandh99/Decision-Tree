@@ -6,6 +6,7 @@
 
 from train_model import *
 from evaluate_model import *
+from prune_model import *
 
 # Perform k-fold cross-validation on the dataset in the specified file
 # First set aside the test dataset. The rest of the dataset will then be used for training and validation
@@ -25,7 +26,7 @@ def cross_validate(filename, kFold = 10):
 	testingDataset = dataset[0:segmentSize, :]
 	trainingAndValidationDataset = dataset[segmentSize:, :]
 
-	# Perform k-fold cross-validation to determine the training set that performs best on the validation set
+	# Perform k-fold cross-validation to determine the decision tree that performs best on the validation set
 	for k in range(kFold):
 		segmentSize = int(len(trainingAndValidationDataset) / kFold)
 
@@ -37,6 +38,11 @@ def cross_validate(filename, kFold = 10):
 
 		# Train the dataset
 		root, depth = decision_tree_learning(trainingDataset, depth)
+		print("Original number of nodes:", root.get_number_of_nodes())
+
+		# Prune the decision tree
+		originalAccuracy, confusionMatrix, labelDict = evaluate(validationDataset, root)		
+		root = prune_tree(root, originalAccuracy, validationDataset)
 
 		# Evaluate the trained decision tree using the validation dataset and select the best tree
 		accuracy, confusionMatrix, labelDict = evaluate(validationDataset, root)
@@ -55,5 +61,5 @@ def cross_validate(filename, kFold = 10):
 
 
 if __name__ == "__main__":
-	cross_validate("noisy_dataset.txt", 10)
+	cross_validate("clean_dataset.txt", 10)
 

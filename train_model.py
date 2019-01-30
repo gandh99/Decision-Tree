@@ -34,17 +34,10 @@ class Node:
         self.right = node.right
 
     def get_number_of_nodes(self):
-        self.numberOfNodes[0] = 0
-        self.calculate_number_of_nodes(self.numberOfNodes)
-        return self.numberOfNodes[0]
-
-    def calculate_number_of_nodes(self, numberOfNodes):
-        numberOfNodes[0] += 1
-        if self.terminalValue == None:
-            self.left.calculate_number_of_nodes(numberOfNodes)
-            self.right.calculate_number_of_nodes(numberOfNodes)
+        if self.left == None and self.right == None:
+            return 1
         else:
-            return
+            return self.left.get_number_of_nodes() + self.right.get_number_of_nodes() + 1
 
 # Main function to recursively train the decision tree
 def decision_tree_learning(training_dataset, depth):

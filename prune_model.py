@@ -15,7 +15,7 @@ def prune_tree(root, originalAccuracy, validationDataset):
 	while True:
 		nodesToPrune = [False]
 		traverse_tree(root, root, nodesToPrune, currentAccuracy, validationDataset)		
-		print("Number of nodes (after pruning):", root.get_number_of_nodes())		#DELETE
+		# print("Number of nodes (after pruning):", root.get_number_of_nodes())		#DELETE
 		# print("Accuracy (after pruning):", (evaluate(validationDataset, root))[0])	#DELETE
 
 		if nodesToPrune[0] == False:
@@ -54,7 +54,7 @@ def prune_node(root, node, nodesToPrune, currentAccuracy, validationDataset):
 	# Finally, determine if the node can be pruned
 	if accuracyLeft >= currentAccuracy[0] or accuracyRight >= currentAccuracy[0]:
 		nodesToPrune[0] = True
-		originalDepth = node.originalDepth		# We use this to ensure the pruned node still retains its original depth
+		originalDepth = node.depth		# We use this to ensure the pruned node still retains its original depth
 
 		if accuracyLeft >= accuracyRight:
 			node.copy_from(node.left)

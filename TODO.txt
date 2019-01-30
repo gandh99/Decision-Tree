@@ -1,8 +1,8 @@
 X Update depth correctly after pruning
-- Refactor code for counting number of codes
+X Refactor code for counting number of nodes
 - Change cross-validation code so that during each iteration, 
 after the pruning we use the pruned tree to test against the TEST
-dataset
+dataset [refer to notebook]
 - Write function to calculate average confusion matrix and 
 metrics based on test dataset AFTER the k-fold. k-fold does not
 produce a single "best" tree; it simply reports the average of the metrics

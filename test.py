@@ -1,12 +1,9 @@
+import numpy as np
+
 class Person:
 	def __init__(self, name):
 		self.name = name
 
-
-def change(nodesToPrune):
-	nodesToPrune[0] = False
-
-nodesToPrune = [True]
-print("Before:", nodesToPrune[0])
-change(nodesToPrune)
-print("After:", nodesToPrune[0])
+dict1 = {"apple":1, "orange":2, "durian":3}
+for key in dict1:
+	print(key)

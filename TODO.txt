@@ -1,5 +1,3 @@
-X Update depth correctly after pruning
-X Refactor code for counting number of nodes
 - Change cross-validation code so that during each iteration, 
 after the pruning we use the pruned tree to test against the TEST
 dataset [refer to notebook]

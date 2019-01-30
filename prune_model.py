@@ -4,32 +4,62 @@
 #                                                                        #
 ##########################################################################
 
+from train_model import *
+from evaluate_model import *
+
 # Main function to prune the decision tree and then return the pruned tree
 def prune_tree(root, originalAccuracy, validationDataset):
+	# print("Number of nodes (before pruning):", root.get_number_of_nodes())	#DELETE
+	# print("Accuracy (before pruning):", originalAccuracy)	#DELETE
+	currentAccuracy = [originalAccuracy]
 	while True:
-		nodesToPrune = []
-		traverse_tree(root, nodesToPrune)		# Get the list of nodes to prune by traversing the entire tree
-		if not nodesToPrune:					# Return if list of nodesToPrune is empty
-			return root
-		else:
-			prune_nodes(nodesToPrune, originalAccuracy, validationDataset)
+		nodesToPrune = [False]
+		traverse_tree(root, root, nodesToPrune, currentAccuracy, validationDataset)		
+		print("Number of nodes (after pruning):", root.get_number_of_nodes())		#DELETE
+		# print("Accuracy (after pruning):", (evaluate(validationDataset, root))[0])	#DELETE
 
-# Traverse the tree looking for nodes connected to 2 leaves and then add them to the list of nodesToPrune
-def traverse_tree(node, nodesToPrune):
+		if nodesToPrune[0] == False:
+			return root
+
+# Traverse the tree looking for nodes connected to 2 leaves and then attempt to prune them
+def traverse_tree(root, node, nodesToPrune, currentAccuracy, validationDataset):
 	# Return if the node is a leaf
 	if node.terminalValue != None:
 		return
 	# If the node is connected to 2 leaves, attempt to prune it
 	elif node.left.terminalValue != None and node.right.terminalValue != None:
-		nodesToPrune.append(node)
+		prune_node(root, node, nodesToPrune, currentAccuracy, validationDataset)
 		return
 	# Otherwise continue traversing the tree to look for nodes to prune
 	else:
-		traverse_tree(node.left, nodesToPrune)
-		traverse_tree(node.right, nodesToPrune)
+		traverse_tree(root, node.left, nodesToPrune, currentAccuracy, validationDataset)
+		traverse_tree(root, node.right, nodesToPrune, currentAccuracy, validationDataset)
 
-# TODO: Check if the node can be pruned and prune it if possible
-# NOTE TO SELF: Will this lead to dangling nodes? Need to re-think feasibility
-def prune_nodes(nodesToPrune, originalAccuracy, validationDataset):
+# Check if the node can be pruned and prune it if possible
+def prune_node(root, node, nodesToPrune, currentAccuracy, validationDataset):
+	# Store data of the original node
+	originalNode = Node(None, None, None, None)
+	originalNode.copy_from(node)
+
+	# Try turning the node into its left leaf
+	node.copy_from(node.left)
+	accuracyLeft, confusionMatrixLeft, labelDictLeft = evaluate(validationDataset, root)
+	node.copy_from(originalNode)
+
+	# Try turning the node into its right leaf
+	node.copy_from(node.right)
+	accuracyRight, confusionMatrixRight, labelDictRight = evaluate(validationDataset, root)
+	node.copy_from(originalNode)
+
+	# Finally, determine if the node can be pruned
+	if accuracyLeft >= currentAccuracy[0] or accuracyRight >= currentAccuracy[0]:
+		nodesToPrune[0] = True
+		if accuracyLeft >= accuracyRight:
+			node.copy_from(node.left)
+			currentAccuracy[0] = accuracyLeft
+		else:
+			node.copy_from(node.right)
+			currentAccuracy[0] = accuracyRight
+
 	return
 

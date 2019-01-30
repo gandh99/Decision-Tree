@@ -27,7 +27,7 @@ def cross_validate(filename, kFold = 10):
 	trainingAndValidationDataset = dataset[segmentSize:, :]
 
 	# Perform k-fold cross-validation to determine the decision tree that performs best on the validation set
-	for k in range(kFold):
+	for k in range(kFold):		
 		segmentSize = int(len(trainingAndValidationDataset) / kFold)
 
 	    # Split dataset into discrete training and validation sets
@@ -38,14 +38,15 @@ def cross_validate(filename, kFold = 10):
 
 		# Train the dataset
 		root, depth = decision_tree_learning(trainingDataset, depth)
-		print("Original number of nodes:", root.get_number_of_nodes())
+		# testAccuracy, confusionMatrix, labelDict = evaluate(testingDataset, root) #DELETE
+		# print("\nAccuracy on test set (before pruning):", testAccuracy)				#DELETE
 
 		# Prune the decision tree
 		originalAccuracy, confusionMatrix, labelDict = evaluate(validationDataset, root)		
 		root = prune_tree(root, originalAccuracy, validationDataset)
 
 		# Evaluate the trained decision tree using the validation dataset and select the best tree
-		accuracy, confusionMatrix, labelDict = evaluate(validationDataset, root)
+		accuracy, confusionMatrix, labelDict = evaluate(validationDataset, root)	# CHANGE: This has to be testing
 		if accuracy > highestAccuracy:
 			bestTree = root
 
@@ -57,9 +58,9 @@ def cross_validate(filename, kFold = 10):
 	print("\nStatistics for individual labels:")
 	for element in labelDict:
 		print(element, ":", labelDict[element])
-	print("\nAccuracy:", testAccuracy)
+	print("\nAccuracy on test set:", testAccuracy)
 
 
 if __name__ == "__main__":
-	cross_validate("clean_dataset.txt", 10)
+	cross_validate("noisy_dataset.txt", 10)
 

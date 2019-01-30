@@ -1,0 +1,6 @@
+- Update depth correctly after pruning
+- Refactor code for counting number of codes
+- 
+- Write function to calculate average confusion matrix and 
+metrics based on test dataset AFTER the k-fold. k-fold does not
+produce a single "best" tree; it simply reports the average of the metrics

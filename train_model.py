@@ -25,7 +25,16 @@ class Node:
         self.left = leftBranch
         self.right = rightBranch
 
+    def copy_from(self, node):
+        self.splitAttribute = node.splitAttribute
+        self.splitValue = node.splitValue
+        self.terminalValue = node.terminalValue
+        self.depth = node.depth
+        self.left = node.left
+        self.right = node.right
+
     def get_number_of_nodes(self):
+        self.numberOfNodes[0] = 0
         self.calculate_number_of_nodes(self.numberOfNodes)
         return self.numberOfNodes[0]
 

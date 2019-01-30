@@ -41,8 +41,8 @@ class Node:
 
 # Main function to recursively train the decision tree
 def decision_tree_learning(training_dataset, depth):
-    numOfRows = len(training_dataset)
-    numOfCols = len(training_dataset[0])
+    numOfRows = training_dataset.shape[0]
+    numOfCols = training_dataset.shape[1]
 
     if numOfRows == 1:
         return (Node(None, None, training_dataset[0, -1], depth), depth)
@@ -77,8 +77,8 @@ def find_split(training_dataset):
     indexOfSplit = 0
     leftDataset = None
     rightDataset = None
-    numOfRows = len(training_dataset)
-    numOfAttributes = len(training_dataset[0]) - 1
+    numOfRows = training_dataset.shape[0]
+    numOfAttributes = training_dataset.shape[1] - 1
 
     for attribute in range(numOfAttributes):
         sortedCopy = training_dataset[np.argsort(training_dataset[:, attribute])] # sort by attribute
@@ -105,7 +105,7 @@ def calculate_gain(sAll, sLeft, sRight):
 
 # Calculate entropy (H value)
 def calculate_entropy(dataset):
-    numOfRows = len(dataset)
+    numOfRows = dataset.shape[0]
     pDictionary = {}
 
     # Iterate through the dataset and update the pDictionary

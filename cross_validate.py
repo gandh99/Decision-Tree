@@ -10,7 +10,7 @@ from prune_model import *
 
 # Perform k-fold cross-validation on the dataset in the specified file
 # First set aside the test dataset. The rest of the dataset will then be used for training and validation
-def cross_validate(filename, kFold = 10):
+def cross_validate(filename, kFold = 10, prune = False):
 	dataset = np.loadtxt(filename)
 	segmentSize = int(dataset.shape[0] / kFold)
 	depth = 0
@@ -23,14 +23,17 @@ def cross_validate(filename, kFold = 10):
 	# First shuffle the dataset
 	np.random.shuffle(dataset)
 
-	# Set aside 10% of data to be the test dataset used at the end. 
-	# The rest (90%) of the data will be used for training and validation
-	testingDataset = dataset[0:segmentSize, :]
-	trainingAndValidationDataset = dataset[segmentSize:, :]
+	# If pruning, set aside 10% of the data for testing and 90% of the data for training and validation
+	if (prune):
+		testingDataset = dataset[0:segmentSize, :]
+		trainingAndValidationDataset = dataset[segmentSize:, :]
+	# If not pruning, we will not use a separate testing set. Instead, we will use the validation set to evaluate the tree
+	else:
+		trainingAndValidationDataset = dataset
 
-	# Perform k-fold cross-validation to determine the decision tree that performs best on the validation set
+	# Perform k-fold cross-validation to generate a set of metrics on the performance of the tree
 	for k in range(kFold):		
-		segmentSize = int(len(trainingAndValidationDataset) / kFold)
+		segmentSize = int(trainingAndValidationDataset.shape[0] / kFold)
 
 	    # Split dataset into discrete training and validation sets
 		validationDataset = trainingAndValidationDataset[k*segmentSize:(k + 1)*segmentSize, :]
@@ -41,12 +44,15 @@ def cross_validate(filename, kFold = 10):
 		# Train the dataset
 		root, depth = decision_tree_learning(trainingDataset, depth)
 
-		# Prune the decision tree
-		originalAccuracy, confusionMatrix, labelDict = evaluate(validationDataset, root)		
-		root = prune_tree(root, originalAccuracy, validationDataset)
+		# Evaluate the tree. Prune the tree first if prune was set to True 
+		if (prune):
+			originalAccuracy, confusionMatrix, labelDict = evaluate(validationDataset, root)		
+			root = prune_tree(root, originalAccuracy, validationDataset)
+			testAccuracy, testConfusionMatrix, testLabelDict = evaluate(testingDataset, root)
+		else:
+			testAccuracy, testConfusionMatrix, testLabelDict = evaluate(validationDataset, root)
 
-		# Evaluate the trained decision tree using the appropriate dataset store the metrics in a list
-		testAccuracy, testConfusionMatrix, testLabelDict = evaluate(validationDataset, root)
+		# Store the evaluation results into their appropriate list
 		listOfAccuracy.append(testAccuracy)
 		listOfConfusionMatrix.append(testConfusionMatrix)
 		listOfLabelDict.append(testLabelDict)
@@ -90,5 +96,6 @@ def calculate_metric_average(listOfAccuracy, listOfConfusionMatrix, listOfLabelD
 
 
 if __name__ == "__main__":
-	cross_validate("noisy_dataset.txt", 10)
+	prune = True
+	cross_validate("noisy_dataset.txt", 10, prune)
 

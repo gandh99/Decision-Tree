@@ -9,7 +9,7 @@ from evaluate_model import *
 
 # Main function to prune the decision tree and then return the pruned tree
 def prune_tree(root, originalAccuracy, validationDataset):
-	# print("Number of nodes (before pruning):", root.get_number_of_nodes())	#DELETE
+	print("Number of nodes (before pruning):", root.get_number_of_nodes())	#DELETE
 	# print("Accuracy (before pruning):", originalAccuracy)	#DELETE
 	currentAccuracy = [originalAccuracy]
 	while True:
@@ -19,6 +19,7 @@ def prune_tree(root, originalAccuracy, validationDataset):
 		# print("Accuracy (after pruning):", (evaluate(validationDataset, root))[0])	#DELETE
 
 		if nodesToPrune[0] == False:
+			print("Number of nodes (after pruning):", root.get_number_of_nodes())		#DELETE
 			return root
 
 # Traverse the tree looking for nodes connected to 2 leaves and then attempt to prune them

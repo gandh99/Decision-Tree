@@ -11,7 +11,7 @@ from train_model import *
 def evaluate(testDB, trainedTree):
     index = 0
     totalErrors = 0
-    numOfRows = len(testDB)
+    numOfRows = testDB.shape[0]
     confusionMatrix = create_confusion_matrix(4, 4)
     labelDict = dict.fromkeys({"label1", "label2", "label3", "label4"}) # Stores data on recall, precision and f1 for each label
 
@@ -54,7 +54,7 @@ def create_confusion_matrix(numOfRows, numOfColumns):
 
 # Metric: true positive, false positive, false negative
 def calculate_metrics(matrix, index):
-    numOfRows = len(matrix)
+    numOfRows = matrix.shape[0]
     truePositive = matrix[index, index]
     falsePositive = 0
     falseNegative = 0

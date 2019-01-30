@@ -54,11 +54,15 @@ def prune_node(root, node, nodesToPrune, currentAccuracy, validationDataset):
 	# Finally, determine if the node can be pruned
 	if accuracyLeft >= currentAccuracy[0] or accuracyRight >= currentAccuracy[0]:
 		nodesToPrune[0] = True
+		originalDepth = node.originalDepth		# We use this to ensure the pruned node still retains its original depth
+
 		if accuracyLeft >= accuracyRight:
 			node.copy_from(node.left)
+			node.depth = originalDepth
 			currentAccuracy[0] = accuracyLeft
 		else:
 			node.copy_from(node.right)
+			node.depth = originalDepth
 			currentAccuracy[0] = accuracyRight
 
 	return

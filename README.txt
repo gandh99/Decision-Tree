@@ -44,11 +44,17 @@ The code comprises 4 different files:
 
 
 3. How to use the code
-Run the code from the cross_validate.py file. In the __main__ section, you may modify any of the following in the cross_validate function:
+Option 1: Run from command line (Windows):
+	- python .\cross_validate.py (filename) (kFold) (True/False)
+	  Run from command line (Linux/macOS):
+	- python cross_validate.py (filename) (kFold) (True/False)
+Option 2: Manually edit the source code in the cross_validate.py file. 
+	  In the __main__ section, you may modify any of the following in the cross_validate function:
 	- filename
 	- kFold
 	- prune
-The results (metric averages) will then be printed onto the screen. 
+Output:
+	- Be patient and the results (metric averages) will then be printed onto the screen. 
 
 
 

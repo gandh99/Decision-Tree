@@ -113,7 +113,7 @@ if __name__ == "__main__":
 		prune = string_to_bool(sys.argv[3])
 		cross_validate(filename, kFold, prune)
 	else:
-		print("usage: filename, kFold, (True/False)")
+		print("usage: (filename) (kFold) (True/False)")
 
 	# # Emergency use if command line does not work
 	# filename = "noisy_dataset.txt"

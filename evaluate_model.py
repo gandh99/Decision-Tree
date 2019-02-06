@@ -70,18 +70,26 @@ def calculate_metrics(matrix, index):
 
 # Metric: recall = true pos / (true pos + false neg)
 def calculate_recall(truePositive, falseNegative):
+    if truePositive + falseNegative == 0:
+        return 0
     return truePositive / (truePositive + falseNegative)
 
 # Metric: precision = true pos / (true pos + false pos)
 def calculate_precision(truePositive, falsePositive):
+    if truePositive + falsePositive == 0:
+        return 0
     return truePositive / (truePositive + falsePositive)
 
 # Metric: F1 = 2 * (prec * rec) / (prec + rec)
 def calculate_f1(precision, recall): 
+    if precision + recall == 0:
+        return 0
     return 2 * (precision * recall) / (precision + recall)
 
 # Metric: classification rate = 1 - classification error
 def calculate_classification_rate(numOfRows, totalErrors):
+    if numOfRows == 0:
+        return 0
     return (numOfRows - totalErrors) / numOfRows
     
 

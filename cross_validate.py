@@ -7,6 +7,7 @@
 from train_model import *
 from evaluate_model import *
 from prune_model import *
+import sys
 
 # Perform k-fold cross-validation on the dataset in the specified file
 # First set aside the test dataset. The rest of the dataset will then be used for training and validation
@@ -40,7 +41,7 @@ def cross_validate(filename, kFold = 10, prune = False):
 		trainingDataset1 = trainingAndValidationDataset[0:k*segmentSize, :]
 		trainingDataset2 = trainingAndValidationDataset[(k + 1)*segmentSize:, :]
 		trainingDataset = np.concatenate((trainingDataset1, trainingDataset2))
-
+		
 		# Train the dataset
 		root, depth = decision_tree_learning(trainingDataset, depth)
 
@@ -94,8 +95,29 @@ def calculate_metric_average(listOfAccuracy, listOfConfusionMatrix, listOfLabelD
 
 	return averageAccuracy, averageConfusionMatrix, averageLabelDict
 
+# Simple function to convert a string to its boolean form
+def string_to_bool(pruneString):
+	if pruneString == "True":
+		return True
+	elif pruneString == "False":
+		return False
+	else:
+		print("usage for prune: (True/False)")
+		raise ValueError
+
 
 if __name__ == "__main__":
-	prune = True
-	cross_validate("noisy_dataset.txt", 10, prune)
+	if (len(sys.argv) == 4):
+		filename = sys.argv[1]
+		kFold = int(sys.argv[2])
+		prune = string_to_bool(sys.argv[3])
+		cross_validate(filename, kFold, prune)
+	else:
+		print("usage: filename, kFold, (True/False)")
+
+	# # Emergency use if command line does not work
+	# filename = "noisy_dataset.txt"
+	# kFold = 10
+	# prune = True
+	# cross_validate(filename, kFold, prune)
 

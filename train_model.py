@@ -19,7 +19,6 @@ class Node:
         self.left = None
         self.right = None
         self.numberOfNodes = [0]
-        # print(splitAttribute, splitValue, terminalValue, depth)
 
     def insert(self, leftBranch, rightBranch):
         self.left = leftBranch
@@ -143,7 +142,4 @@ if __name__ == "__main__":
     root, depth = decision_tree_learning(trainingDataset, depth)
 
     # Plot the tree in matplotlib
-    # plot_tree(root)
-
-    # Plot the tree with graphiz
-    # generate_data(root)
+    plot_tree(root)

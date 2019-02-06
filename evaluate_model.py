@@ -77,7 +77,7 @@ def calculate_precision(truePositive, falsePositive):
     return truePositive / (truePositive + falsePositive)
 
 # Metric: F1 = 2 * (prec * rec) / (prec + rec)
-def calculate_f1(precision, recall):
+def calculate_f1(precision, recall): 
     return 2 * (precision * recall) / (precision + recall)
 
 # Metric: classification rate = 1 - classification error

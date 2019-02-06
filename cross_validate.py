@@ -43,6 +43,7 @@ def cross_validate(filename, kFold = 10, prune = False):
 		trainingDataset = np.concatenate((trainingDataset1, trainingDataset2))
 		
 		# Train the dataset
+		depth = 0
 		root, depth = decision_tree_learning(trainingDataset, depth)
 
 		# Evaluate the tree. Prune the tree first if prune was set to True 

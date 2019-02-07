@@ -33,7 +33,7 @@ The code comprises 4 different files:
 	- [return]: Root of pruned decision tree (Node object)
 
 2.4. cross_validate.py
-- cross_validate(filename, kFold, prune):
+- cross_validate(filename, kFold, prune, plotTree):
 	- filename: Name of the file on which to perform cross validation
 	- kFold: Number of times to perform the k-fold cross validation. Default = 10
 	- prune: Boolean variable on whether to prune the decision tree. Default = False
@@ -42,19 +42,26 @@ The code comprises 4 different files:
 		- Average confusion matrix
 		- Average values for labelDict
 
+2.5. plot_model.py
+- plot_tree(node):
+	- node: Root of trained decision tree (Node object)
+	- [output]:
+		- Visualisation of the tree in matplotlib
+
 
 3. How to use the code
 Option 1: Run from command line (Windows):
-	- python .\cross_validate.py (filename) (kFold) (True/False)
+		- python .\cross_validate.py <filename> <kFold> <prune: True/False> <plotTree: True/False>
 	  Run from command line (Linux/macOS):
-	- python cross_validate.py (filename) (kFold) (True/False)
+		- python cross_validate.py <filename> <kFold> <prune: True/False> <plotTree: True/False>
 Option 2: Manually edit the source code in the cross_validate.py file. 
 	  In the __main__ section, you may modify any of the following in the cross_validate function:
 	- filename
 	- kFold
 	- prune
+	- plotTree
 Output:
-	- Be patient and the results (metric averages) will then be printed onto the screen. 
+	- Be patient and the results (metric averages of all folds) will then be printed onto the screen. 
 
 
 

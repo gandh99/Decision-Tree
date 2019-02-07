@@ -7,11 +7,12 @@
 from train_model import *
 from evaluate_model import *
 from prune_model import *
+from plot_model import *
 import sys
 
 # Perform k-fold cross-validation on the dataset in the specified file
 # First set aside the test dataset. The rest of the dataset will then be used for training and validation
-def cross_validate(filename, kFold = 10, prune = False):
+def cross_validate(filename, kFold = 10, prune = False, plotTree = False):
 	dataset = np.loadtxt(filename)
 	segmentSize = int(dataset.shape[0] / kFold)
 	depth = 0
@@ -25,7 +26,7 @@ def cross_validate(filename, kFold = 10, prune = False):
 	np.random.shuffle(dataset)
 
 	# If pruning, set aside 10% of the data for testing and 90% of the data for training and validation
-	if (prune):
+	if prune:
 		testingDataset = dataset[0:segmentSize, :]
 		trainingAndValidationDataset = dataset[segmentSize:, :]
 	# If not pruning, we will not use a separate testing set. Instead, we will use the validation set to evaluate the tree
@@ -47,7 +48,7 @@ def cross_validate(filename, kFold = 10, prune = False):
 		root, depth = decision_tree_learning(trainingDataset, depth)
 
 		# Evaluate the tree. Prune the tree first if prune was set to True 
-		if (prune):
+		if prune:
 			originalAccuracy, confusionMatrix, labelDict = evaluate(validationDataset, root)		
 			root = prune_tree(root, originalAccuracy, validationDataset)
 			testAccuracy, testConfusionMatrix, testLabelDict = evaluate(testingDataset, root)
@@ -58,6 +59,10 @@ def cross_validate(filename, kFold = 10, prune = False):
 		listOfAccuracy.append(testAccuracy)
 		listOfConfusionMatrix.append(testConfusionMatrix)
 		listOfLabelDict.append(testLabelDict)
+
+		# Plot the tree (only for the last k) if plotTree was set to True
+		if plotTree and k == kFold - 1:
+			plot_tree(root)
 
 	# Compute the averages of the metrics that were previously stored in a list
 	averageAccuracy, averageConfusionMatrix, averageLabelDict = calculate_metric_average(listOfAccuracy, listOfConfusionMatrix, listOfLabelDict)
@@ -97,28 +102,30 @@ def calculate_metric_average(listOfAccuracy, listOfConfusionMatrix, listOfLabelD
 	return averageAccuracy, averageConfusionMatrix, averageLabelDict
 
 # Simple function to convert a string to its boolean form
-def string_to_bool(pruneString):
-	if pruneString == "True":
+def string_to_bool(string):
+	if string == "True":
 		return True
-	elif pruneString == "False":
+	elif string == "False":
 		return False
 	else:
-		print("usage for prune: (True/False)")
+		print("argument for boolean: <True/False>")
 		raise ValueError
 
 
 if __name__ == "__main__":
-	if (len(sys.argv) == 4):
+	if (len(sys.argv) == 5):
 		filename = sys.argv[1]
 		kFold = int(sys.argv[2])
 		prune = string_to_bool(sys.argv[3])
-		cross_validate(filename, kFold, prune)
+		plotTree = string_to_bool(sys.argv[4])
+		cross_validate(filename, kFold, prune, plotTree)
 	else:
-		print("usage: (filename) (kFold) (True/False)")
+		print("usage: <filename> <kFold> <prune: True/False> <plotTree: True/False>")
 
 	# # Emergency use if command line does not work
 	# filename = "noisy_dataset.txt"
 	# kFold = 10
 	# prune = True
-	# cross_validate(filename, kFold, prune)
+	# plotTree = True
+	# cross_validate(filename, kFold, prune, plotTree)
 

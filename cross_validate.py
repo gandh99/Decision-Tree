@@ -34,7 +34,8 @@ def cross_validate(filename, kFold = 10, prune = False, plotTree = False):
 		trainingAndValidationDataset = dataset
 
 	# Perform k-fold cross-validation to generate a set of metrics on the performance of the tree
-	for k in range(kFold):		
+	for k in range(kFold):
+		print("Processing fold no.: ", k + 1)	# Fold counting starts from 1	
 		segmentSize = int(trainingAndValidationDataset.shape[0] / kFold)
 
 	    # Split dataset into discrete training and validation sets

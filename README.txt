@@ -7,6 +7,10 @@ The code comprises 4 different files:
 	- prune_model.py
 	- cross_validate.py
 
+1.1. Environment Setup
+- python3.7.2
+- Numpy
+- Matplotlib
 
 2. Files and APIs
 
@@ -62,6 +66,7 @@ Option 2: Manually edit the source code in the cross_validate.py file.
 	- plotTree
 Output:
 	- Be patient and the results (metric averages of all folds) will then be printed onto the screen. 
+
 
 
 

@@ -7,7 +7,6 @@
 import numpy as np
 import math
 from plot_model import * 
-from graphiz_model import *
 
 # Holds the data of each node/leaf in the decision tree
 class Node:
